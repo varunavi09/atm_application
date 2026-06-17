@@ -1,4 +1,4 @@
-const Account = require("../models/Account");
+const Account = require("../models/account");
 
 const signup = async (req, res) => {
   try {
@@ -114,6 +114,7 @@ const deposit = async (req, res) => {
 const withdraw = async (req, res) => {
   try {
     const { accountNumber, amount } = req.body;
+    const withdrawalAmount = Number(amount);
 
     const account = await Account.findOne({ accountNumber });
 
@@ -123,13 +124,13 @@ const withdraw = async (req, res) => {
       });
     }
 
-    if (account.balance < amount) {
+    if (account.balance < withdrawalAmount) {
       return res.status(400).json({
         message: "Insufficient balance",
       });
     }
 
-    account.balance -= Number(amount);
+    account.balance -= withdrawalAmount;
 
     await account.save();
 
